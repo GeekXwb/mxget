@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package api;
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+
+service Music {
+    rpc SearchSongs (SearchSongsRequest) returns (SearchSongsResponse) {
+        option (google.api.http) = {
+            get:"/api/{platform}/search/{keyword}"
+        };
+    };
+    rpc GetSong (SongRequest) returns (SongResponse) {
+        option (google.api.http) = {
+            get:"/api/{platform}/song/{id}"
+        };
+    };
+    rpc GetAlbum (AlbumRequest) returns (AlbumResponse) {
+        option (google.api.http) = {
+            get:"/api/{platform}/album/{id}"
+        };
+    };
+    rpc GetPlaylist (PlaylistRequest) returns (PlaylistResponse) {
+        option (google.api.http) = {
+            get:"/api/{platform}/playlist/{id}"
+        };
+    };
+    rpc GetArtist (ArtistRequest) returns (ArtistResponse) {
+        option (google.api.http) = {
+            get:"/api/{platform}/artist/{id}"
+        };
+    };
+}
+
+message SongRequest {
+    string platform = 1;
+    string id = 2;
+}
+
+message SongResponse {
+    string id = 1;
+    string name = 2;
+    string artist = 3;
+    string album = 4;
+    string pic_url = 5;
+    string lyric = 6;
+    bool playable = 7 [(gogoproto.jsontag) = "playable"];
+    string url = 8;
+}
+
+message AlbumRequest {
+    string platform = 1;
+    string id = 2;
+}
+
+message AlbumResponse {
+    string id = 1;
+    string name = 2;
+    string pic_url = 3;
+    uint32 count = 4;
+    repeated SongResponse songs = 5;
+}
+
+message PlaylistRequest {
+    string platform = 1;
+    string id = 2;
+}
+
+message PlaylistResponse {
+    string id = 1;
+    string name = 2;
+    string pic_url = 3;
+    uint32 count = 4;
+    repeated SongResponse songs = 5;
+}
+
+message ArtistRequest {
+    string platform = 1;
+    string id = 2;
+}
+
+message ArtistResponse {
+    string id = 1;
+    string name = 2;
+    string pic_url = 3;
+    uint32 count = 4;
+    repeated SongResponse songs = 5;
+}
+
+message SearchSongsRequest {
+    string platform = 1;
+    string keyword = 2;
+}
+
+message SearchSongsResponse {
+    string keyword = 1;
+    uint32 count = 2;
+    repeated SongResponse songs = 3;
+}
